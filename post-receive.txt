@@ -1,0 +1,12 @@
+#!/bin/sh
+while read oldrev newrev refname
+do
+	echo "Running Deploy"
+	repo_url=$PWD
+	base_url="http://deploy.dev.co.uk/api/deploy/create?url=$repo_url&branch=$refname"
+	echo "Talking to $base_url"
+	curl -s $base_url
+	echo " - Done!"
+done
+
+exit 0

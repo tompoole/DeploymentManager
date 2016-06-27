@@ -1,0 +1,44 @@
+﻿@using DeploymentManager.Core
+@model DeploymentManager.Web.ViewModels.CompletedJobsViewModel
+
+<div class="deployment-group">
+    <h3>Last 100 Completed Deployments</h3>
+    @if (Model.CompletedDeployments.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Branch</th>
+                    <th>State</th>
+                    <th>Message</th>
+                    <th>Completed</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var deployment in Model.CompletedDeployments)
+                {
+                    <tr class="state-@deployment.State.ToLowerInvariant()">
+                        <td><a href="@Url.Action("ViewLog", new {id = deployment.Id})">@deployment.JobName</a></td>
+                        <td>@deployment.Branch</td>
+                        <td>@deployment.State</td>
+                        <td class="status-msg">@deployment.Status</td>
+                        <td>
+                            @deployment.CompletedDate.ToReadableString()
+                            </td>
+                            
+                        <td>
+                            @deployment.TimeTaken.ToReadableString()
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="no-deployments">No completed deployments</p>
+    }
+</div>

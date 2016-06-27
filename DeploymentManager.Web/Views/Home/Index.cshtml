@@ -1,0 +1,120 @@
+﻿@using DeploymentManager.Core
+@model DeploymentManager.Web.ViewModels.DeploymentDashboardViewModel
+<h3>Running Deployments</h3>
+
+<div class="deployment-group running">
+    @if (Model.RunningDeployments.Any())
+    {
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Repo URL</th>
+                    <th>Branch</th>
+                    <th>Current Status</th>
+                    <th>Started</th>
+                    <th>Time Taken</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var deployment in Model.RunningDeployments)
+                {
+                    <tr>
+                        <td>
+                            <a href="/Home/ViewLog/@deployment.Id">@deployment.JobName</a>
+                        </td>
+                        <td>@deployment.Url</td>
+                        <td>@deployment.Branch</td>
+                        <td>@deployment.Status</td>
+                        <td>@deployment.StartedDate.ToReadableString()</td>
+                        <td>@deployment.TimeTaken.ToReadableString()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="no-deployments">No running deployments</p>
+    }
+</div>
+
+<div class="deployment-group pending">
+    <h3>Pending Deployments</h3>
+    @if (Model.PendingDeployments.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Repo URL</th>
+                    <th>Branch</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var deployment in Model.PendingDeployments)
+                {
+                    <tr>
+                        <td>@deployment.JobName</td>
+                        <td>@deployment.Url</td>
+                        <td>@deployment.Branch</td>
+                        <td>@deployment.CreatedDate</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="no-deployments">
+            No pending deployments
+        </p>
+    }
+</div>
+
+<div class="deployment-group">
+    <h3>Completed Deployments</h3>
+    @if (Model.CompletedDeployments.Any())
+    {
+        <p>Showing last 10 deployments, latest first - <a href="@Url.Action("MoreCompleted")">Show more...</a></p>
+        
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Branch</th>
+                    <th>State</th>
+                    <th>Message</th>
+                    <th>Completed</th>
+                    <th>Duration</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var deployment in Model.CompletedDeployments)
+                {
+                    <tr class="state-@deployment.State.ToLowerInvariant()">
+                        <td><a href="@Url.Action("ViewLog", new {id = deployment.Id})">@deployment.JobName</a></td>
+                        <td>@deployment.Branch</td>
+                        <td>@deployment.State</td>
+                        <td class="status-msg">@deployment.Status</td>
+                        <td>
+                            @deployment.CompletedDate.ToReadableString()
+                            </td>
+                            
+                        <td>
+                            @deployment.TimeTaken.ToReadableString()
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="no-deployments">No completed deployments</p>
+    }
+</div>
